@@ -1,0 +1,32 @@
+<div class="bar">
+  <div class="bar__inner">
+    <div class="bar__title">
+      COMPARADOR DE PRODUCTOS
+      <span class="bar__count">{{ instruments.length }}/2</span>
+    </div>
+
+    <div class="bar__slots">
+      <div class="bar__slot" *ngFor="let slot of slots">
+        <ng-container *ngIf="slot; else empty">
+          <img *ngIf="slot.imageUrl" [src]="slot.imageUrl" [alt]="slot.name" class="bar__slot-img" />
+          <div *ngIf="!slot.imageUrl" class="bar__slot-img bar__slot-img--placeholder">🎸</div>
+          <div class="bar__slot-info">
+            <p class="bar__slot-name">{{ slot.name }}</p>
+            <p class="bar__slot-price">€{{ slot.price }}</p>
+          </div>
+          <button class="bar__slot-remove" (click)="remove.emit(slot.id)">✕</button>
+        </ng-container>
+        <ng-template #empty>
+          <p class="bar__slot-empty">Añade más productos para comparar</p>
+        </ng-template>
+      </div>
+    </div>
+
+    <div class="bar__actions">
+      <button class="bar__clear-btn" (click)="clear.emit()">LIMPIAR TODO</button>
+      <button class="bar__compare-btn" [disabled]="instruments.length < 2" (click)="onCompare()">
+        VER COMPARACIÓN DETALLADA
+      </button>
+    </div>
+  </div>
+</div>

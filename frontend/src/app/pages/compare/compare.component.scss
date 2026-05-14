@@ -1,0 +1,65 @@
+.compare-page { min-height: 100vh; background: #0d0d0d; }
+
+.header {
+  border-bottom: 1px solid #2a2a2a; padding: 16px 24px;
+  &__inner { max-width: 800px; margin: 0 auto; }
+  &__logo { color: #fff; font-weight: 700; font-size: 18px; text-decoration: none;
+    span { color: #D4A017; margin-right: 6px; }
+  }
+}
+
+.main { max-width: 800px; margin: 0 auto; padding: 40px 24px; }
+
+.page-title { color: #fff; font-size: 28px; font-weight: 700; margin: 0 0 8px; }
+.page-subtitle { color: #9ca3af; font-size: 14px; margin: 0 0 32px; }
+
+.form-card {
+  background: #1a1a1a; border: 1px solid #2a2a2a;
+  border-radius: 12px; padding: 24px; margin-bottom: 24px;
+}
+
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+
+.form-group {
+  display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px;
+  label { color: #9ca3af; font-size: 13px; font-weight: 500; }
+  input {
+    background: #111; border: 1px solid #2a2a2a; color: #fff;
+    border-radius: 8px; padding: 10px 12px; font-size: 14px; outline: none;
+    &:focus { border-color: #D4A017; }
+    &::placeholder { color: #4b5563; }
+  }
+}
+
+.error { color: #ef4444; font-size: 13px; margin: 0 0 12px; }
+
+.compare-btn {
+  width: 100%; background: #D4A017; color: #000; border: none;
+  font-weight: 700; padding: 12px; border-radius: 8px;
+  cursor: pointer; font-size: 15px; transition: background 0.2s;
+  &:hover:not(:disabled) { background: #B8860B; }
+  &:disabled { background: #374151; color: #6b7280; cursor: not-allowed; }
+}
+
+.result-card {
+  background: #1a1a1a; border: 1px solid #2a2a2a;
+  border-radius: 12px; padding: 24px;
+
+  &__header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+  &__trophy { font-size: 32px; }
+  &__winner { color: #fff; font-weight: 600; font-size: 16px; margin: 0; }
+  &__recommendation { color: #9ca3af; font-size: 13px; margin: 4px 0 0; }
+  &__reasoning { color: #d1d5db; font-size: 14px; line-height: 1.6; margin-bottom: 20px; }
+
+  &__instruments { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  &__instrument {
+    background: #111; border-radius: 8px; padding: 16px;
+  }
+  &__instrument-name { color: #fff; font-weight: 500; font-size: 14px; margin: 0 0 4px; }
+  &__instrument-price { color: #D4A017; font-size: 13px; margin: 0 0 12px; }
+
+  &__bar { background: #2a2a2a; border-radius: 9999px; height: 6px; margin-bottom: 8px; }
+  &__bar-fill { background: #3b82f6; height: 100%; border-radius: 9999px; transition: width 0.5s; }
+
+  &__meta { display: flex; justify-content: space-between; color: #6b7280; font-size: 11px; }
+}

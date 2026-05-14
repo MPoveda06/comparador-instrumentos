@@ -1,0 +1,32 @@
+<div class="card">
+  <!-- Imagen -->
+  <div class="card__image">
+    <img *ngIf="instrument.imageUrl; else placeholder" [src]="instrument.imageUrl" [alt]="instrument.name" />
+    <ng-template #placeholder>
+      <div class="card__placeholder">🎸</div>
+    </ng-template>
+
+    <span class="card__badge">{{ badge }}</span>
+
+    <button class="card__compare-btn" [class.card__compare-btn--added]="isInCompare" (click)="onCompareClick()">
+      {{ isInCompare ? '✓ AÑADIDO' : '+ COMPARAR' }}
+    </button>
+  </div>
+
+  <!-- Contenido -->
+  <div class="card__body">
+    <p class="card__category">{{ categoryLabels[instrument.category] || instrument.category }}</p>
+    <h3 class="card__name">{{ instrument.name }}</h3>
+
+    <div class="card__stars">
+      <span *ngFor="let s of [1,2,3,4,5]" [class.active]="s <= 4">★</span>
+      <small>ELO: {{ instrument.eloRating }}</small>
+    </div>
+
+    <div class="card__footer">
+      <span class="card__price">{{ instrument.currency === 'EUR' ? '€' : '$' }}{{ instrument.price | number }}</span>
+      <button class="card__cart-btn">🛒</button>
+    </div>
+    <p class="card__store">en {{ instrument.store }}</p>
+  </div>
+</div>
