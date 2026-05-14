@@ -1,80 +1,157 @@
 <div class="compare-page">
+  <!-- Header -->
   <header class="header">
     <div class="header__inner">
-      <a href="/" class="header__logo"><span>♪</span> SOUND COMPARE</a>
+      <a href="/" class="header__logo">
+        <span>🎵</span>
+        <div>
+          <strong>TONEWISE</strong>
+          <small>Music Comparator</small>
+        </div>
+      </a>
+      <a href="/" class="header__back">← Volver al catálogo</a>
     </div>
   </header>
 
   <main class="main">
-    <h1 class="page-title">Comparador con IA</h1>
-    <p class="page-subtitle">Claude analiza dos instrumentos y decide cuál es mejor para ti.</p>
+    <div class="page-header">
+      <h1 class="page-title">Comparador <span>con IA</span></h1>
+      <p class="page-subtitle">Claude analiza ambos instrumentos y emite un veredicto experto.</p>
+    </div>
 
+    <!-- Formulario -->
     <div class="form-card">
-      <div class="form-row">
+      <div class="form-card__grid">
         <div class="form-group">
-          <label>ID Instrumento A</label>
-          <input [(ngModel)]="idA" name="idA" placeholder="ej: abc123" />
+          <label class="form-group__label">
+            <span class="form-group__tag form-group__tag--a">A</span>
+            ID del primer instrumento
+          </label>
+          <input class="form-group__input" [(ngModel)]="idA" name="idA" placeholder="Copia el ID desde Firestore" />
         </div>
+
+        <div class="form-card__vs">VS</div>
+
         <div class="form-group">
-          <label>ID Instrumento B</label>
-          <input [(ngModel)]="idB" name="idB" placeholder="ej: xyz789" />
+          <label class="form-group__label">
+            <span class="form-group__tag form-group__tag--b">B</span>
+            ID del segundo instrumento
+          </label>
+          <input class="form-group__input" [(ngModel)]="idB" name="idB" placeholder="Copia el ID desde Firestore" />
         </div>
-      </div>
-      <div class="form-group">
-        <label>Contexto (opcional)</label>
-        <input [(ngModel)]="context" name="context" placeholder="ej: soy principiante buscando mi primera guitarra" />
       </div>
 
-      <p class="error" *ngIf="error">{{ error }}</p>
+      <div class="form-group form-group--context">
+        <label class="form-group__label">💬 Contexto (opcional)</label>
+        <input class="form-group__input" [(ngModel)]="context" name="context"
+          placeholder="ej: soy principiante buscando mi primera guitarra eléctrica con presupuesto ajustado" />
+      </div>
+
+      @if (error) {
+        <p class="form-error">⚠ {{ error }}</p>
+      }
 
       <button class="compare-btn" (click)="runCompare()" [disabled]="loading">
-        {{ loading ? 'Consultando a Claude...' : 'Comparar' }}
+        @if (loading) {
+          <span class="compare-btn__spinner">⟳</span> Consultando a Claude...
+        } @else {
+          ⚡ Comparar instrumentos
+        }
       </button>
     </div>
 
-    <div class="result-card" *ngIf="result">
-      <div class="result__header">
-        <span class="result__trophy">
-          {{ result.comparison.winner === 'draw' ? '🤝' : '🏆' }}
-        </span>
-        <div>
-          <p class="result__winner">
-            <ng-container *ngIf="result.comparison.winner === 'draw'">Empate</ng-container>
-            <ng-container *ngIf="result.comparison.winner === 'a'">Gana: {{ result.instruments.a.name }}</ng-container>
-            <ng-container *ngIf="result.comparison.winner === 'b'">Gana: {{ result.instruments.b.name }}</ng-container>
-          </p>
-          <p class="result__recommendation">{{ result.comparison.recommendation }}</p>
-        </div>
-      </div>
+    <!-- Resultado -->
+    @if (result) {
+      <div class="result">
 
-      <p class="result__reasoning">{{ result.comparison.reasoning }}</p>
+        <!-- Veredicto principal -->
+        <div class="verdict">
+          <div class="verdict__icon">
+            {{ result.comparison.winner === 'draw' ? '🤝' : '🏆' }}
+          </div>
+          <div class="verdict__content">
+            <p class="verdict__label">VEREDICTO DE CLAUDE</p>
+            <h2 class="verdict__title">
+              @if (result.comparison.winner === 'draw') { Empate técnico }
+              @else if (result.comparison.winner === 'a') { Gana {{ result.instruments.a.name }} }
+              @else { Gana {{ result.instruments.b.name }} }
+            </h2>
+            <p class="verdict__recommendation">{{ result.comparison.recommendation }}</p>
+          </div>
+        </div>
 
-      <div class="result__instruments">
-        <!-- Instrumento A -->
-        <div class="result__instrument">
-          <p class="result__instrument-name">{{ result.instruments.a.name }}</p>
-          <p class="result__instrument-price">€{{ result.instruments.a.price }}</p>
-          <div class="result__bar">
-            <div class="result__bar-fill" [style.width.%]="result.comparison.scores.a"></div>
+        <!-- Razonamiento -->
+        <div class="reasoning">
+          <p class="reasoning__label">📋 Análisis detallado</p>
+          <p class="reasoning__text">{{ result.comparison.reasoning }}</p>
+        </div>
+
+        <!-- Instrumentos -->
+        <div class="instruments">
+
+          <!-- Instrumento A -->
+          <div class="instrument" [class.instrument--winner]="result.comparison.winner === 'a'">
+            @if (result.comparison.winner === 'a') {
+              <span class="instrument__crown">👑 GANADOR</span>
+            }
+            <div class="instrument__image-wrapper">
+              @if (result.instruments.a.imageUrl) {
+                <img [src]="result.instruments.a.imageUrl" [alt]="result.instruments.a.name" class="instrument__image" />
+              } @else {
+                <div class="instrument__image-placeholder">🎸</div>
+              }
+            </div>
+            <div class="instrument__info">
+              <span class="instrument__tag instrument__tag--a">A</span>
+              <h3 class="instrument__name">{{ result.instruments.a.name }}</h3>
+              <p class="instrument__brand">{{ result.instruments.a.brand }}</p>
+              <p class="instrument__price">€{{ result.instruments.a.price | number }}</p>
+            </div>
+            <div class="instrument__score">
+              <div class="instrument__score-bar">
+                <div class="instrument__score-fill instrument__score-fill--a"
+                  [style.width.%]="result.comparison.scores.a"></div>
+              </div>
+              <div class="instrument__score-meta">
+                <span class="instrument__score-num">{{ result.comparison.scores.a }}<small>/100</small></span>
+                <span class="instrument__elo">ELO {{ result.instruments.a.eloRating }}</span>
+              </div>
+            </div>
           </div>
-          <div class="result__meta">
-            <span>{{ result.comparison.scores.a }}/100</span>
-            <span>ELO: {{ result.instruments.a.eloRating }}</span>
+
+          <!-- Instrumento B -->
+          <div class="instrument" [class.instrument--winner]="result.comparison.winner === 'b'">
+            @if (result.comparison.winner === 'b') {
+              <span class="instrument__crown">👑 GANADOR</span>
+            }
+            <div class="instrument__image-wrapper">
+              @if (result.instruments.b.imageUrl) {
+                <img [src]="result.instruments.b.imageUrl" [alt]="result.instruments.b.name" class="instrument__image" />
+              } @else {
+                <div class="instrument__image-placeholder">🎸</div>
+              }
+            </div>
+            <div class="instrument__info">
+              <span class="instrument__tag instrument__tag--b">B</span>
+              <h3 class="instrument__name">{{ result.instruments.b.name }}</h3>
+              <p class="instrument__brand">{{ result.instruments.b.brand }}</p>
+              <p class="instrument__price">€{{ result.instruments.b.price | number }}</p>
+            </div>
+            <div class="instrument__score">
+              <div class="instrument__score-bar">
+                <div class="instrument__score-fill instrument__score-fill--b"
+                  [style.width.%]="result.comparison.scores.b"></div>
+              </div>
+              <div class="instrument__score-meta">
+                <span class="instrument__score-num">{{ result.comparison.scores.b }}<small>/100</small></span>
+                <span class="instrument__elo">ELO {{ result.instruments.b.eloRating }}</span>
+              </div>
+            </div>
           </div>
         </div>
-        <!-- Instrumento B -->
-        <div class="result__instrument">
-          <p class="result__instrument-name">{{ result.instruments.b.name }}</p>
-          <p class="result__instrument-price">€{{ result.instruments.b.price }}</p>
-          <div class="result__bar">
-            <div class="result__bar-fill" [style.width.%]="result.comparison.scores.b"></div>
-          </div>
-          <div class="result__meta">
-            <span>{{ result.comparison.scores.b }}/100</span>
-            <span>ELO: {{ result.instruments.b.eloRating }}</span>
-          </div>
-        </div>
+
+        <button class="retry-btn" (click)="result = null">↩ Nueva comparación</button>
       </div>
-    </div>
+    }
   </main>
 </div>

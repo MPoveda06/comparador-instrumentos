@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { InstrumentService } from '../../services/instrument.service';
@@ -26,6 +26,7 @@ const SORT_OPTIONS = [
 @Component({
   selector: 'app-home',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Default,
   imports: [CommonModule, FormsModule, InstrumentCardComponent, ComparatorBarComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
@@ -43,7 +44,10 @@ export class HomeComponent implements OnInit {
   categories = CATEGORIES;
   sortOptions = SORT_OPTIONS;
 
-  constructor(private instrumentService: InstrumentService) {}
+  constructor(
+    private instrumentService: InstrumentService,
+    private cdr: ChangeDetectorRef,
+  ) {}
 
   ngOnInit(): void {
     this.loadInstruments();
@@ -51,23 +55,28 @@ export class HomeComponent implements OnInit {
 
   loadInstruments(): void {
     this.loading = true;
+    this.cdr.detectChanges();
+
     this.instrumentService.getAll().subscribe({
       next: (res) => {
         this.allInstruments = res.instruments ?? [];
         this.applyFilters();
         this.loading = false;
+        this.cdr.detectChanges();
       },
-      error: () => { this.loading = false; },
+      error: () => {
+        this.loading = false;
+        this.cdr.detectChanges();
+      },
     });
   }
 
   applyFilters(): void {
+    const q = this.searchQuery.toLowerCase();
     let result = this.allInstruments.filter(i => {
       const matchCategory = !this.activeCategory || i.category === this.activeCategory;
       const matchPrice = i.price <= this.maxPrice;
-      const matchSearch = !this.searchQuery ||
-        i.name.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-        i.brand.toLowerCase().includes(this.searchQuery.toLowerCase());
+      const matchSearch = !q || i.name.toLowerCase().includes(q) || i.brand.toLowerCase().includes(q);
       return matchCategory && matchPrice && matchSearch;
     });
 
@@ -79,20 +88,12 @@ export class HomeComponent implements OnInit {
     }
 
     this.filteredInstruments = [...result];
+    this.cdr.detectChanges();
   }
 
   onSearch(): void { this.applyFilters(); }
-
-  setCategory(key: string): void {
-    this.activeCategory = key;
-    this.applyFilters();
-  }
-
-  setSort(key: string): void {
-    this.activeSort = key;
-    this.applyFilters();
-  }
-
+  setCategory(key: string): void { this.activeCategory = key; this.applyFilters(); }
+  setSort(key: string): void { this.activeSort = key; this.applyFilters(); }
   toggleFilters(): void { this.showFilters = !this.showFilters; }
 
   toggleCompare(instrument: Instrument): void {
@@ -102,13 +103,9 @@ export class HomeComponent implements OnInit {
     } else if (this.compareList.length < 2) {
       this.compareList = [...this.compareList, instrument];
     }
+    this.cdr.detectChanges();
   }
 
-  isInCompare(id: string): boolean {
-    return this.compareList.some(i => i.id === id);
-  }
-
-  removeFromCompare(id: string): void {
-    this.compareList = this.compareList.filter(i => i.id !== id);
-  }
+  isInCompare(id: string): boolean { return this.compareList.some(i => i.id === id); }
+  removeFromCompare(id: string): void { this.compareList = this.compareList.filter(i => i.id !== id); }
 }
