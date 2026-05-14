@@ -31,7 +31,7 @@ const SORT_OPTIONS = [
   styleUrl: './home.component.scss',
 })
 export class HomeComponent implements OnInit {
-  instruments: Instrument[] = [];
+  allInstruments: Instrument[] = [];
   filteredInstruments: Instrument[] = [];
   compareList: Instrument[] = [];
   searchQuery = '';
@@ -51,35 +51,41 @@ export class HomeComponent implements OnInit {
 
   loadInstruments(): void {
     this.loading = true;
-    this.instrumentService.getAll(this.activeCategory || undefined, this.searchQuery || undefined)
-      .subscribe({
-        next: (res) => {
-          this.instruments = res.instruments ?? [];
-          this.applyFilters();
-          this.loading = false;
-        },
-        error: () => { this.loading = false; },
-      });
+    this.instrumentService.getAll().subscribe({
+      next: (res) => {
+        this.allInstruments = res.instruments ?? [];
+        this.applyFilters();
+        this.loading = false;
+      },
+      error: () => { this.loading = false; },
+    });
   }
 
   applyFilters(): void {
-    let result = [...this.instruments].filter(i => i.price <= this.maxPrice);
+    let result = this.allInstruments.filter(i => {
+      const matchCategory = !this.activeCategory || i.category === this.activeCategory;
+      const matchPrice = i.price <= this.maxPrice;
+      const matchSearch = !this.searchQuery ||
+        i.name.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
+        i.brand.toLowerCase().includes(this.searchQuery.toLowerCase());
+      return matchCategory && matchPrice && matchSearch;
+    });
 
     switch (this.activeSort) {
-      case 'elo': result.sort((a, b) => b.eloRating - a.eloRating); break;
-      case 'price_asc': result.sort((a, b) => a.price - b.price); break;
+      case 'elo':        result.sort((a, b) => b.eloRating - a.eloRating); break;
+      case 'price_asc':  result.sort((a, b) => a.price - b.price); break;
       case 'price_desc': result.sort((a, b) => b.price - a.price); break;
-      case 'name': result.sort((a, b) => a.name.localeCompare(b.name)); break;
+      case 'name':       result.sort((a, b) => a.name.localeCompare(b.name)); break;
     }
 
-    this.filteredInstruments = result;
+    this.filteredInstruments = [...result];
   }
 
-  onSearch(): void { this.loadInstruments(); }
+  onSearch(): void { this.applyFilters(); }
 
   setCategory(key: string): void {
     this.activeCategory = key;
-    this.loadInstruments();
+    this.applyFilters();
   }
 
   setSort(key: string): void {

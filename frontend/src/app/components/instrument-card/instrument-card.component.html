@@ -1,25 +1,24 @@
 <div class="card">
-  <!-- Imagen -->
   <div class="card__image">
-    <img *ngIf="instrument.imageUrl; else placeholder" [src]="instrument.imageUrl" [alt]="instrument.name" />
-    <ng-template #placeholder>
+    @if (instrument.imageUrl) {
+      <img [src]="instrument.imageUrl" [alt]="instrument.name" />
+    } @else {
       <div class="card__placeholder">🎸</div>
-    </ng-template>
-
+    }
     <span class="card__badge">{{ badge }}</span>
-
     <button class="card__compare-btn" [class.card__compare-btn--added]="isInCompare" (click)="onCompareClick()">
       {{ isInCompare ? '✓ AÑADIDO' : '+ COMPARAR' }}
     </button>
   </div>
 
-  <!-- Contenido -->
   <div class="card__body">
     <p class="card__category">{{ categoryLabels[instrument.category] || instrument.category }}</p>
     <h3 class="card__name">{{ instrument.name }}</h3>
 
     <div class="card__stars">
-      <span *ngFor="let s of [1,2,3,4,5]" [class.active]="s <= 4">★</span>
+      @for (s of [1,2,3,4,5]; track s) {
+        <span [class.active]="s <= 4">★</span>
+      }
       <small>ELO: {{ instrument.eloRating }}</small>
     </div>
 
