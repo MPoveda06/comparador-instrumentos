@@ -3,8 +3,11 @@
   <header class="header">
     <div class="header__inner">
       <div class="header__logo">
-        <span class="header__note">♪</span>
-        <span class="header__title">SOUND COMPARE</span>
+        <span class="header__icon">🎵</span>
+        <div class="header__brand">
+          <strong>TONEWISE</strong>
+          <small>Music Comparator</small>
+        </div>
       </div>
       <nav class="header__nav">
         <a href="/">Inicio</a>
@@ -15,12 +18,12 @@
 
   <!-- Hero -->
   <section class="hero">
-    <h1 class="hero__title">Encuentra los mejores precios en instrumentos musicales.</h1>
-    <p class="hero__subtitle">Comparamos productos de todas las tiendas web para que encuentres tu sonido perfecto al mejor precio.</p>
+    <span class="hero__eyebrow">✦ Comparador inteligente de instrumentos</span>
+    <h1 class="hero__title">Encuentra el instrumento<br><span>perfecto para ti</span></h1>
+    <p class="hero__subtitle">Comparamos precios y características de miles de instrumentos en las mejores tiendas. Claude decide cuál gana.</p>
 
     <form class="hero__search" (ngSubmit)="onSearch()">
-      <div class="hero__search-input-wrapper">
-        <span class="hero__search-icon">🔍</span>
+      <div class="hero__search-wrapper">
         <input
           class="hero__search-input"
           type="text"
@@ -43,7 +46,7 @@
   <main class="main" [class.main--with-bar]="compareList.length > 0">
     <div class="filters">
       <div class="filters__left">
-        <button class="filters__toggle">☰ MOSTRAR FILTROS</button>
+        <button class="filters__toggle">⚙ FILTROS</button>
         <span class="filters__count">{{ instruments.length }} productos encontrados</span>
         <div class="filters__categories">
           <button
@@ -51,27 +54,22 @@
             class="filters__cat-btn"
             [class.filters__cat-btn--active]="activeCategory === cat.key"
             (click)="setCategory(cat.key)"
-          >
-            {{ cat.label }}
-          </button>
+          >{{ cat.label }}</button>
         </div>
       </div>
-      <span class="filters__order">Ordenar por: Relevancia</span>
+      <span class="filters__order">Ordenar por: Relevancia ▾</span>
     </div>
 
-    <!-- Skeleton -->
     <div class="grid" *ngIf="loading">
       <div class="skeleton" *ngFor="let i of [1,2,3,4,5,6,7,8]"></div>
     </div>
 
-    <!-- Vacío -->
     <div class="empty" *ngIf="!loading && instruments.length === 0">
       <p>🎸</p>
-      <p>No hay instrumentos aún.</p>
-      <small>Usa el endpoint /api/instruments para añadir instrumentos.</small>
+      <p>No hay instrumentos aún</p>
+      <small>Los datos de prueba se cargan automáticamente al arrancar el backend.</small>
     </div>
 
-    <!-- Grid de tarjetas -->
     <div class="grid" *ngIf="!loading && instruments.length > 0">
       <app-instrument-card
         *ngFor="let instrument of instruments"
@@ -82,7 +80,6 @@
     </div>
   </main>
 
-  <!-- Barra comparador -->
   <app-comparator-bar
     *ngIf="compareList.length > 0"
     [instruments]="compareList"
