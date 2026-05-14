@@ -109,6 +109,7 @@
     font-size: 12px; padding: 7px 14px; border-radius: 8px; cursor: pointer;
     transition: all 0.2s;
     &:hover { color: #fff; border-color: var(--gold); }
+    &--active { color: var(--gold); border-color: var(--gold); background: var(--gold-dim); }
   }
   &__count { color: var(--muted); font-size: 12px; }
   &__categories { display: flex; gap: 6px; flex-wrap: wrap; }
@@ -117,12 +118,43 @@
     font-size: 12px; padding: 5px 14px; border-radius: 9999px; cursor: pointer;
     transition: all 0.2s;
     &:hover { color: #fff; border-color: var(--gold-dim); }
-    &--active {
-      background: var(--gold); border-color: var(--gold);
-      color: #000; font-weight: 700;
+    &--active { background: var(--gold); border-color: var(--gold); color: #000; font-weight: 700; }
+  }
+  &__sort { display: flex; align-items: center; gap: 8px; }
+  &__sort-label { color: var(--muted); font-size: 12px; }
+  &__sort-select {
+    background: var(--card); border: 1px solid var(--border); color: #fff;
+    font-size: 12px; padding: 6px 10px; border-radius: 8px; outline: none; cursor: pointer;
+    transition: border-color 0.2s;
+    &:focus { border-color: var(--gold); }
+    option { background: #1a1a1a; }
+  }
+}
+
+// Panel de filtros
+.filter-panel {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 12px; padding: 20px 24px; margin-bottom: 20px;
+  animation: slideDown 0.2s ease;
+
+  &__group { display: flex; flex-direction: column; gap: 10px; max-width: 320px; }
+  &__label { color: var(--muted); font-size: 13px;
+    strong { color: var(--gold); }
+  }
+  &__range {
+    -webkit-appearance: none; width: 100%; height: 4px;
+    background: var(--border); border-radius: 2px; outline: none;
+    &::-webkit-slider-thumb {
+      -webkit-appearance: none; width: 16px; height: 16px;
+      background: var(--gold); border-radius: 50%; cursor: pointer;
     }
   }
-  &__order { color: var(--muted); font-size: 12px; }
+  &__range-labels { display: flex; justify-content: space-between; color: var(--muted-light); font-size: 11px; }
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 // Grid

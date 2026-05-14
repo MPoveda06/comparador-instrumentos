@@ -7,9 +7,11 @@ export class InstrumentsController {
   constructor(private readonly service: InstrumentsService) {}
 
   @Get()
-  findAll(@Query('category') category?: string, @Query('q') q?: string) {
-    if (q) return this.service.search(q);
-    return this.service.findAll(category);
+  async findAll(@Query('category') category?: string, @Query('q') q?: string) {
+    const instruments = q
+      ? await this.service.search(q)
+      : await this.service.findAll(category);
+    return { instruments };
   }
 
   @Get(':id')

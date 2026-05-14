@@ -24,13 +24,8 @@
 
     <form class="hero__search" (ngSubmit)="onSearch()">
       <div class="hero__search-wrapper">
-        <input
-          class="hero__search-input"
-          type="text"
-          [(ngModel)]="searchQuery"
-          name="search"
-          placeholder="Buscar guitarras, baterías, teclados, micrófonos..."
-        />
+        <input class="hero__search-input" type="text" [(ngModel)]="searchQuery" name="search"
+          placeholder="Buscar guitarras, baterías, teclados, micrófonos..." />
       </div>
       <button class="hero__search-btn" type="submit">BUSCAR</button>
     </form>
@@ -44,46 +39,65 @@
 
   <!-- Filtros + Grid -->
   <main class="main" [class.main--with-bar]="compareList.length > 0">
+
+    <!-- Barra de filtros -->
     <div class="filters">
       <div class="filters__left">
-        <button class="filters__toggle">⚙ FILTROS</button>
-        <span class="filters__count">{{ instruments.length }} productos encontrados</span>
+        <button class="filters__toggle" [class.filters__toggle--active]="showFilters" (click)="toggleFilters()">
+          ⚙ {{ showFilters ? 'OCULTAR FILTROS' : 'MOSTRAR FILTROS' }}
+        </button>
+        <span class="filters__count">{{ filteredInstruments.length }} productos encontrados</span>
         <div class="filters__categories">
-          <button
-            *ngFor="let cat of categories"
-            class="filters__cat-btn"
+          <button *ngFor="let cat of categories" class="filters__cat-btn"
             [class.filters__cat-btn--active]="activeCategory === cat.key"
-            (click)="setCategory(cat.key)"
-          >{{ cat.label }}</button>
+            (click)="setCategory(cat.key)">{{ cat.label }}</button>
         </div>
       </div>
-      <span class="filters__order">Ordenar por: Relevancia ▾</span>
+
+      <!-- Ordenar -->
+      <div class="filters__sort">
+        <span class="filters__sort-label">Ordenar:</span>
+        <select class="filters__sort-select" [(ngModel)]="activeSort" name="sort" (change)="applyFilters()">
+          <option *ngFor="let opt of sortOptions" [value]="opt.key">{{ opt.label }}</option>
+        </select>
+      </div>
     </div>
 
+    <!-- Panel de filtros desplegable -->
+    <div class="filter-panel" *ngIf="showFilters">
+      <div class="filter-panel__group">
+        <label class="filter-panel__label">Precio máximo: <strong>€{{ maxPrice }}</strong></label>
+        <input class="filter-panel__range" type="range" [(ngModel)]="maxPrice" name="maxPrice"
+          min="0" max="5000" step="50" (input)="applyFilters()" />
+        <div class="filter-panel__range-labels">
+          <span>€0</span><span>€5.000</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Skeleton -->
     <div class="grid" *ngIf="loading">
       <div class="skeleton" *ngFor="let i of [1,2,3,4,5,6,7,8]"></div>
     </div>
 
-    <div class="empty" *ngIf="!loading && instruments.length === 0">
+    <!-- Vacío -->
+    <div class="empty" *ngIf="!loading && filteredInstruments.length === 0">
       <p>🎸</p>
-      <p>No hay instrumentos aún</p>
-      <small>Los datos de prueba se cargan automáticamente al arrancar el backend.</small>
+      <p>No hay instrumentos</p>
+      <small>Prueba a cambiar los filtros o añade datos con el seed script.</small>
     </div>
 
-    <div class="grid" *ngIf="!loading && instruments.length > 0">
-      <app-instrument-card
-        *ngFor="let instrument of instruments"
+    <!-- Grid -->
+    <div class="grid" *ngIf="!loading && filteredInstruments.length > 0">
+      <app-instrument-card *ngFor="let instrument of filteredInstruments"
         [instrument]="instrument"
         [isInCompare]="isInCompare(instrument.id)"
-        (addToCompare)="toggleCompare($event)"
-      />
+        (addToCompare)="toggleCompare($event)" />
     </div>
   </main>
 
-  <app-comparator-bar
-    *ngIf="compareList.length > 0"
+  <app-comparator-bar *ngIf="compareList.length > 0"
     [instruments]="compareList"
     (remove)="removeFromCompare($event)"
-    (clear)="compareList = []"
-  />
+    (clear)="compareList = []" />
 </div>
