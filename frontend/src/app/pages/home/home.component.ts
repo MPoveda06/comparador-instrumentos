@@ -1,7 +1,9 @@
 import { Component, OnInit, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 import { InstrumentService } from '../../services/instrument.service';
+import { AuthService } from '../../services/auth.service';
 import { Instrument } from '../../models/instrument.model';
 import { InstrumentCardComponent } from '../../components/instrument-card/instrument-card.component';
 import { ComparatorBarComponent } from '../../components/comparator-bar/comparator-bar.component';
@@ -27,7 +29,7 @@ const SORT_OPTIONS = [
   selector: 'app-home',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.Default,
-  imports: [CommonModule, FormsModule, InstrumentCardComponent, ComparatorBarComponent],
+  imports: [CommonModule, FormsModule, RouterModule, InstrumentCardComponent, ComparatorBarComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
 })
@@ -47,6 +49,7 @@ export class HomeComponent implements OnInit {
   constructor(
     private instrumentService: InstrumentService,
     private cdr: ChangeDetectorRef,
+    public auth: AuthService,
   ) {}
 
   ngOnInit(): void {

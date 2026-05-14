@@ -20,4 +20,8 @@ export class InstrumentService {
   getOne(id: string): Observable<Instrument> {
     return this.http.get<Instrument>(`${this.base}/${id}`);
   }
+
+  create(dto: Partial<Instrument>): Observable<{ instrument: Instrument }> {
+    return this.http.post<{ instrument: Instrument }>(this.base, dto);
+  }
 }

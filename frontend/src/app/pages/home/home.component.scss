@@ -20,18 +20,28 @@
     small { color: var(--gold); font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; }
   }
   &__nav {
-    display: flex; align-items: center; gap: 28px;
+    display: flex; align-items: center; gap: 24px;
     a {
       color: var(--muted); font-size: 13px; letter-spacing: 0.03em;
-      transition: color 0.2s; position: relative; padding-bottom: 2px;
+      transition: color 0.2s; text-decoration: none;
       &:hover { color: #fff; }
-      &::after {
-        content: ''; position: absolute; bottom: -2px; left: 0; right: 0;
-        height: 1px; background: var(--gold); transform: scaleX(0);
-        transition: transform 0.2s;
-      }
-      &:hover::after { transform: scaleX(1); }
     }
+  }
+  &__admin-link { color: var(--gold) !important; font-weight: 600; }
+  &__login-btn {
+    background: var(--gold); color: #000 !important; font-weight: 700;
+    font-size: 12px !important; padding: 7px 16px; border-radius: 8px;
+    transition: background 0.2s !important;
+    &:hover { background: #B8860B !important; color: #000 !important; }
+  }
+  &__user { display: flex; align-items: center; gap: 8px; }
+  &__avatar { width: 28px; height: 28px; border-radius: 50%; border: 1px solid var(--border); }
+  &__username { color: var(--muted); font-size: 13px; }
+  &__logout {
+    background: none; border: 1px solid var(--border); color: var(--muted);
+    font-size: 11px; padding: 5px 10px; border-radius: 6px; cursor: pointer;
+    transition: all 0.2s;
+    &:hover { color: #fff; border-color: #ef4444; }
   }
 }
 

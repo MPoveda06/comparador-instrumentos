@@ -10,8 +10,22 @@
         </div>
       </div>
       <nav class="header__nav">
-        <a href="/">Inicio</a>
-        <a href="/compare">Comparar</a>
+        <a routerLink="/">Inicio</a>
+        <a routerLink="/compare">Comparar</a>
+        @if (auth.isAdmin()) {
+          <a routerLink="/admin" class="header__admin-link">🛠️ Admin</a>
+        }
+        @if (auth.isLoggedIn()) {
+          <div class="header__user">
+            @if (auth.user()?.photoURL) {
+              <img [src]="auth.user()!.photoURL!" [alt]="auth.user()!.displayName!" class="header__avatar" />
+            }
+            <span class="header__username">{{ auth.user()?.displayName }}</span>
+            <button class="header__logout" (click)="auth.logout()">Salir</button>
+          </div>
+        } @else {
+          <a routerLink="/login" class="header__login-btn">Iniciar sesión</a>
+        }
       </nav>
     </div>
   </header>

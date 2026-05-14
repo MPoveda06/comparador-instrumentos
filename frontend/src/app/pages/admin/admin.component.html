@@ -1,0 +1,106 @@
+<div class="admin-page">
+  <header class="header">
+    <div class="header__inner">
+      <a routerLink="/" class="header__logo">
+        <span>🎵</span>
+        <div><strong>TONEWISE</strong><small>Admin Panel</small></div>
+      </a>
+      <div class="header__actions">
+        <span class="header__user">{{ auth.user()?.displayName }}</span>
+        <button class="header__logout" (click)="auth.logout()">Cerrar sesión</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="main">
+    <div class="page-header">
+      <div>
+        <h1 class="page-title">🛠️ Panel de administración</h1>
+        <p class="page-subtitle">Gestiona el catálogo de instrumentos</p>
+      </div>
+      <button class="add-btn" (click)="showForm = !showForm">
+        {{ showForm ? '✕ Cancelar' : '+ Añadir instrumento' }}
+      </button>
+    </div>
+
+    @if (showForm) {
+      <div class="form-card">
+        <h2 class="form-card__title">Nuevo instrumento</h2>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Nombre</label>
+            <input [(ngModel)]="form.name" name="name" placeholder="Fender Stratocaster..." />
+          </div>
+          <div class="form-group">
+            <label>Marca</label>
+            <input [(ngModel)]="form.brand" name="brand" placeholder="Fender" />
+          </div>
+          <div class="form-group">
+            <label>Categoría</label>
+            <select [(ngModel)]="form.category" name="category">
+              @for (cat of categories; track cat) {
+                <option [value]="cat">{{ cat }}</option>
+              }
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Precio (€)</label>
+            <input type="number" [(ngModel)]="form.price" name="price" placeholder="999" />
+          </div>
+          <div class="form-group">
+            <label>URL imagen</label>
+            <input [(ngModel)]="form.imageUrl" name="imageUrl" placeholder="https://..." />
+          </div>
+          <div class="form-group">
+            <label>Tienda</label>
+            <input [(ngModel)]="form.store" name="store" placeholder="Thomann" />
+          </div>
+          <div class="form-group form-group--full">
+            <label>URL de origen</label>
+            <input [(ngModel)]="form.sourceUrl" name="sourceUrl" placeholder="https://www.thomann.de/..." />
+          </div>
+        </div>
+        <button class="submit-btn" (click)="submit()">Guardar instrumento</button>
+      </div>
+    }
+
+    @if (loading) {
+      <p class="loading">Cargando...</p>
+    } @else {
+      <div class="table-wrapper">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Imagen</th>
+              <th>Nombre</th>
+              <th>Marca</th>
+              <th>Categoría</th>
+              <th>Precio</th>
+              <th>ELO</th>
+              <th>Tienda</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (inst of instruments; track inst.id) {
+              <tr>
+                <td>
+                  @if (inst.imageUrl) {
+                    <img [src]="inst.imageUrl" [alt]="inst.name" class="table__img" />
+                  } @else {
+                    <span class="table__no-img">🎸</span>
+                  }
+                </td>
+                <td class="table__name">{{ inst.name }}</td>
+                <td>{{ inst.brand }}</td>
+                <td><span class="table__cat">{{ inst.category }}</span></td>
+                <td class="table__price">€{{ inst.price }}</td>
+                <td class="table__elo">{{ inst.eloRating }}</td>
+                <td>{{ inst.store }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </main>
+</div>

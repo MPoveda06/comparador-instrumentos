@@ -1,0 +1,42 @@
+<div class="login-page">
+  <div class="login-card">
+    <div class="login-card__logo">
+      <span>🎵</span>
+      <div>
+        <strong>TONEWISE</strong>
+        <small>Music Comparator</small>
+      </div>
+    </div>
+
+    <h1 class="login-card__title">Bienvenido</h1>
+    <p class="login-card__subtitle">Inicia sesión para comparar instrumentos y guardar tus favoritos.</p>
+
+    <div class="login-card__roles">
+      <div class="role-item">
+        <span class="role-item__icon">👤</span>
+        <div>
+          <p class="role-item__name">Usuario</p>
+          <p class="role-item__desc">Comparar + favoritos</p>
+        </div>
+      </div>
+      <div class="role-item">
+        <span class="role-item__icon">🛠️</span>
+        <div>
+          <p class="role-item__name">Admin</p>
+          <p class="role-item__desc">Gestionar catálogo</p>
+        </div>
+      </div>
+    </div>
+
+    @if (error) {
+      <p class="login-card__error">⚠ {{ error }}</p>
+    }
+
+    <button class="google-btn" (click)="loginWithGoogle()" [disabled]="loading">
+      <img src="https://www.google.com/favicon.ico" alt="Google" width="18" height="18" />
+      {{ loading ? 'Iniciando sesión...' : 'Continuar con Google' }}
+    </button>
+
+    <a href="/" class="login-card__skip">Continuar sin cuenta →</a>
+  </div>
+</div>
