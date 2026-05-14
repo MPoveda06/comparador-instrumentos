@@ -1,0 +1,39 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Next.js
+web/.next/
+web/out/
+
+# Environment files - NEVER commit these
+.env
+.env.local
+.env.*.local
+web/.env
+web/.env.local
+api/.env
+
+# Python
+api/__pycache__/
+api/.venv/
+api/venv/
+api/*.pyc
+api/.pytest_cache/
+
+# Build outputs
+dist/
+build/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editors
+.vscode/
+.idea/
+*.swp
+
+# Vercel
+.vercel
