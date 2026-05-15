@@ -130,6 +130,13 @@
     &:hover { color: #fff; border-color: var(--gold-dim); }
     &--active { background: var(--gold); border-color: var(--gold); color: #000; font-weight: 700; }
   }
+  &__fav-btn {
+    border: 1px solid var(--border); background: none; color: var(--muted);
+    font-size: 12px; padding: 7px 14px; border-radius: 8px; cursor: pointer;
+    transition: all 0.2s;
+    &:hover { color: #fff; border-color: #ef4444; }
+    &--active { background: rgba(239,68,68,0.1); border-color: #ef4444; color: #f87171; }
+  }
   &__sort { display: flex; align-items: center; gap: 8px; }
   &__sort-label { color: var(--muted); font-size: 12px; }
   &__sort-select {

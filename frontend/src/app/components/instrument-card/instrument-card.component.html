@@ -5,10 +5,18 @@
     } @else {
       <div class="card__placeholder">🎸</div>
     }
+
     <span class="card__badge">{{ badge }}</span>
+
     <button class="card__compare-btn" [class.card__compare-btn--added]="isInCompare" (click)="onCompareClick()">
       {{ isInCompare ? '✓ AÑADIDO' : '+ COMPARAR' }}
     </button>
+
+    @if (auth.isLoggedIn()) {
+      <button class="card__fav-btn" [class.card__fav-btn--active]="favs.isFavorite(instrument.id)" (click)="onFavoriteClick()">
+        {{ favs.isFavorite(instrument.id) ? '❤️' : '🤍' }}
+      </button>
+    }
   </div>
 
   <div class="card__body">

@@ -18,7 +18,7 @@
         @if (auth.isLoggedIn()) {
           <div class="header__user">
             @if (auth.user()?.photoURL) {
-              <img [src]="auth.user()!.photoURL!" [alt]="auth.user()!.displayName!" class="header__avatar" />
+              <img [src]="auth.user()!.photoURL!" [alt]="auth.user()!.displayName!" class="header__avatar" referrerpolicy="no-referrer" />
             }
             <span class="header__username">{{ auth.user()?.displayName }}</span>
             <button class="header__logout" (click)="auth.logout()">Salir</button>
@@ -59,6 +59,11 @@
         <button class="filters__toggle" [class.filters__toggle--active]="showFilters" (click)="toggleFilters()">
           ⚙ {{ showFilters ? 'OCULTAR FILTROS' : 'MOSTRAR FILTROS' }}
         </button>
+        @if (auth.isLoggedIn()) {
+          <button class="filters__fav-btn" [class.filters__fav-btn--active]="showOnlyFavorites" (click)="toggleFavorites()">
+            ❤️ Mis favoritos
+          </button>
+        }
         <span class="filters__count">{{ filteredInstruments.length }} productos encontrados</span>
         <div class="filters__categories">
           @for (cat of categories; track cat.key) {

@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { InstrumentService } from '../../services/instrument.service';
 import { AuthService } from '../../services/auth.service';
+import { FavoritesService } from '../../services/favorites.service';
 import { Instrument } from '../../models/instrument.model';
 import { InstrumentCardComponent } from '../../components/instrument-card/instrument-card.component';
 import { ComparatorBarComponent } from '../../components/comparator-bar/comparator-bar.component';
@@ -42,6 +43,7 @@ export class HomeComponent implements OnInit {
   activeSort = 'elo';
   maxPrice = 5000;
   showFilters = false;
+  showOnlyFavorites = false;
   loading = true;
   categories = CATEGORIES;
   sortOptions = SORT_OPTIONS;
@@ -50,6 +52,7 @@ export class HomeComponent implements OnInit {
     private instrumentService: InstrumentService,
     private cdr: ChangeDetectorRef,
     public auth: AuthService,
+    public favs: FavoritesService,
   ) {}
 
   ngOnInit(): void {
@@ -80,7 +83,8 @@ export class HomeComponent implements OnInit {
       const matchCategory = !this.activeCategory || i.category === this.activeCategory;
       const matchPrice = i.price <= this.maxPrice;
       const matchSearch = !q || i.name.toLowerCase().includes(q) || i.brand.toLowerCase().includes(q);
-      return matchCategory && matchPrice && matchSearch;
+      const matchFav = !this.showOnlyFavorites || this.favs.isFavorite(i.id);
+      return matchCategory && matchPrice && matchSearch && matchFav;
     });
 
     switch (this.activeSort) {
@@ -95,6 +99,7 @@ export class HomeComponent implements OnInit {
   }
 
   onSearch(): void { this.applyFilters(); }
+  toggleFavorites(): void { this.showOnlyFavorites = !this.showOnlyFavorites; this.applyFilters(); }
   setCategory(key: string): void { this.activeCategory = key; this.applyFilters(); }
   setSort(key: string): void { this.activeSort = key; this.applyFilters(); }
   toggleFilters(): void { this.showFilters = !this.showFilters; }
