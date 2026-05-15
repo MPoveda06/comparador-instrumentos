@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://TU-BACKEND.railway.app/api',
+  apiUrl: 'https://comparador-instrumentos-production.up.railway.app/api',
 };
